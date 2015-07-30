@@ -13,16 +13,20 @@ class Scorer(object):
         self._base = 1
 
     def touch(self, key, cost=None):
-        self.time[key] += self._base
+        time = self._base
         self._base *= self._base_multiplier
 
         if cost is not None:
             if self.limit is None or cost < self.limit:
                 self.cost[key] = cost
+                self.time[key] += self._base
+                time = self.time[key]
         else:
             try:
                 cost = self.cost[key]
+                self.time[key] += self._base
+                time = self.time[key]
             except KeyError:
                 return
 
-        return cost * self.time[key]
+        return cost * time
