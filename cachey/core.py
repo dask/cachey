@@ -7,8 +7,7 @@ class Scorer(object):
         self.time = defaultdict(lambda: 0)
         self.limit = limit
 
-        self.halflife = halflife
-        self._base_multiplier = (1 + log(2)) / 1000.
+        self._base_multiplier = 1 + log(2) / float(halflife)
         self.tick = 1
         self._base = 1
 

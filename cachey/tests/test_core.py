@@ -19,3 +19,13 @@ def test_limit():
     assert a > 0
     assert 'x' not in s.cost  # don't take up space with bad elements
     assert 'x' not in s.time
+
+
+def test_halflife():
+    s = Scorer(1)
+    a = s.touch('x', 10)
+    b = s.touch('y', 1)
+    b = s.touch('y', 1)
+    b = s.touch('y', 1)
+    b = s.touch('y', 1)
+    assert b > a
