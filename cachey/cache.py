@@ -17,6 +17,45 @@ def memo_key(args, kwargs):
 
 
 class Cache(object):
+    """ A cache that prefers long-running cheap-to-store computations
+
+    This cache prefers computations that have the following properties:
+
+    1.  Costly to compute (seconds)
+    2.  Cheap to store (bytes)
+    3.  Frequently used
+    4.  Recently used
+
+    Parameters
+    ----------
+
+    available_bytes: int
+        The number of bytes of data to keep in the cache
+    limit: float
+        The minimum cost something must be to consider to keep in the cache
+    scorer: optional with halflife
+        A Scorer object (see cachey/scorer.py)
+    halflife: int, optional with scorer
+        The halflife in number of touches of the score of a piece of data
+    nbytes: function (defaults to cachey/nbytes.py)
+        Function to compute the number of bytes of an input.
+    cost:  function  (defaults to cost())
+        Determine cost from nbytes and time
+
+    Example
+    -------
+    >>> from cachey import Cache
+    >>> c = Cache(1e9, 10)  # 1GB of space, costs must be 10 or higher
+
+    >>> c.put('x', 1, cost=5)
+    >>> c.get('x')
+    1
+
+    >>> def inc(x):
+    ...     return x + 1
+
+    >>> memo_inc = c.memoize(inc)  # Memoize functions
+    """
     def __init__(self, available_bytes, limit, scorer=None, halflife=1000, nbytes=nbytes, cost=cost):
         if scorer is None:
             scorer = Scorer(halflife)
@@ -32,6 +71,13 @@ class Cache(object):
         self.total_bytes = 0
 
     def put(self, key, value, cost, nbytes=None):
+        """ Put key-value data into cache with associated cost
+
+        >>> c = Cache(1e9, 10)
+        >>> c.put('x', 10, cost=5)
+        >>> c.get('x')
+        10
+        """
         if nbytes is None:
             nbytes = self.get_nbytes(value)
         if cost < self.limit:
@@ -42,9 +88,15 @@ class Cache(object):
                 self.nbytes[key] = nbytes
                 self.total_bytes += nbytes
                 self.shrink()
-                return score
 
     def get(self, key, default=None):
+        """ Get value associated with key.  Returns None if not present
+
+        >>> c = Cache(1e9, 10)
+        >>> c.put('x', 10, cost=5)
+        >>> c.get('x')
+        10
+        """
         self.scorer.touch(key)
         if key in self.data:
             return self.data[key]
@@ -52,10 +104,20 @@ class Cache(object):
             return default
 
     def retire(self, key):
+        """ Retire/remove a key from the cache
+
+        See Also:
+            shrink
+        """
         val = self.data.pop(key)
         self.total_bytes -= self.nbytes.pop(key)
 
     def shrink(self):
+        """ Retire keys from the cache until we're under bytes budget
+
+        See Also:
+            retire
+        """
         if self.total_bytes <= self.available_bytes:
             return
 
@@ -64,6 +126,19 @@ class Cache(object):
             self.retire(key)
 
     def memoize(self, func, key=memo_key):
+        """ Create a cached function
+
+        >>> def inc(x):
+        ...     return x + 1
+
+        >>> c = Cache(1e9, limit=10)
+
+        >>> memo_inc = c.memoize(inc)
+        >>> memo_inc(1)  # computes first time
+        2
+        >>> memo_inc(1)  # uses cached result (if computation has a high score)
+        2
+        """
         def cached_func(*args, **kwargs):
             k = (func, key(args, kwargs))
 
