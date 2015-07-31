@@ -8,7 +8,10 @@ where both the cost of recomputation and the cost of storge routinely vary by
 one milllion or more.  Consider the following computations
 
 ```python
+# Want this
 np.std(x)        # tiny result, costly to recompute
+
+# Don't want this
 np.transpose(x)  # huge result, cheap to recompute
 ```
 
