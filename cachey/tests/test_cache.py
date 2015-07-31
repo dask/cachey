@@ -10,9 +10,21 @@ def test_cache():
     c.put('a', 1, 10)
     c.put('b', 1, 10)
     c.put('c', 1, 10)
-    assert set(c.data) == set('abc')
+    assert set(c.data) == set('xbc')
     c.put('d', 1, 10)
-    assert set(c.data) == set('bcd')
+    assert set(c.data) == set('xcd')
+
+
+def test_cache_scores_update():
+    c = Cache(available_bytes=nbytes(1) * 2)
+    c.put('x', 1, 1)
+    c.put('y', 1, 1)
+    c.get('x')
+    c.get('x')
+    c.get('x')
+
+    c.put('z', 1, 1)
+    assert set(c.data) == set('xz')
 
 
 def test_memoize():

@@ -85,7 +85,9 @@ class Cache(object):
             nbytes = self.get_nbytes(value)
         if cost >= self.limit:
             score = self.scorer.touch(key, cost)
-            if not self.heap or score > self.heap.peekitem()[1]:
+            if (not self.heap or
+                nbytes + self.total_bytes < self.available_bytes or
+                score > self.heap.peekitem()[1]):
                 self.data[key] = value
                 self.heap[key] = score
                 self.nbytes[key] = nbytes
@@ -100,11 +102,12 @@ class Cache(object):
         >>> c.get('x')
         10
         """
-        self.scorer.touch(key)
+        score = self.scorer.touch(key)
         if key in self.data:
             value = self.data[key]
             if self.hit is not None:
                 self.hit(key, value)
+            self.heap[key] = score
             return value
         else:
             if self.miss is not None:
