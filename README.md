@@ -33,10 +33,10 @@ roughly linear amplification of repeated results.
 Example
 -------
 
-from cachey import Cache
-c = Cache(1e9, 1)  # 1 GB, cut off anything with cost 1 or less
-
 ```python
+>>> from cachey import Cache
+>>> c = Cache(1e9, 1)  # 1 GB, cut off anything with cost 1 or less
+
 >>> c.put('x', 'some value', cost=3)
 >>> c.put('y', 'other value', cost=2)
 
