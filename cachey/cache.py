@@ -78,4 +78,3 @@ class Cache(object):
                 self.put(k, result, cost(nb, end - start), nbytes=nb)
             return result
         return cached_func
-
