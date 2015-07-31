@@ -47,7 +47,7 @@ class Cache(object):
     >>> from cachey import Cache
     >>> c = Cache(1e9, 10)  # 1GB of space, costs must be 10 or higher
 
-    >>> c.put('x', 1, cost=5)
+    >>> c.put('x', 1, cost=50)
     >>> c.get('x')
     1
 
@@ -56,7 +56,7 @@ class Cache(object):
 
     >>> memo_inc = c.memoize(inc)  # Memoize functions
     """
-    def __init__(self, available_bytes, limit, scorer=None, halflife=1000,
+    def __init__(self, available_bytes, limit=0, scorer=None, halflife=1000,
                  nbytes=nbytes, cost=cost, hit=None, miss=None):
         if scorer is None:
             scorer = Scorer(halflife)
@@ -77,7 +77,7 @@ class Cache(object):
         """ Put key-value data into cache with associated cost
 
         >>> c = Cache(1e9, 10)
-        >>> c.put('x', 10, cost=5)
+        >>> c.put('x', 10, cost=50)
         >>> c.get('x')
         10
         """
@@ -96,7 +96,7 @@ class Cache(object):
         """ Get value associated with key.  Returns None if not present
 
         >>> c = Cache(1e9, 10)
-        >>> c.put('x', 10, cost=5)
+        >>> c.put('x', 10, cost=50)
         >>> c.get('x')
         10
         """
@@ -139,7 +139,7 @@ class Cache(object):
         >>> def inc(x):
         ...     return x + 1
 
-        >>> c = Cache(1e9, limit=10)
+        >>> c = Cache(1e9)
 
         >>> memo_inc = c.memoize(inc)
         >>> memo_inc(1)  # computes first time

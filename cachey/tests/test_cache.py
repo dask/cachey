@@ -2,7 +2,7 @@ from cachey import Cache, Scorer, nbytes
 from time import sleep
 
 def test_cache():
-    c = Cache(available_bytes=nbytes(1) * 3, limit=0)
+    c = Cache(available_bytes=nbytes(1) * 3)
 
     c.put('x', 1, 10)
     assert c.get('x') == 1
@@ -16,7 +16,7 @@ def test_cache():
 
 
 def test_memoize():
-    c = Cache(available_bytes=nbytes(1) * 3, limit=0)
+    c = Cache(available_bytes=nbytes(1) * 3)
 
     flag = [0]
     def slow_inc(x):
@@ -41,7 +41,7 @@ def test_callbacks():
     def miss(key):
         miss_flag[0] = key
 
-    c = Cache(100, 0, hit=hit, miss=miss)
+    c = Cache(100, hit=hit, miss=miss)
 
     c.get('x')
     assert miss_flag[0] == 'x'
