@@ -56,7 +56,8 @@ class Cache(object):
 
     >>> memo_inc = c.memoize(inc)  # Memoize functions
     """
-    def __init__(self, available_bytes, limit, scorer=None, halflife=1000, nbytes=nbytes, cost=cost):
+    def __init__(self, available_bytes, limit, scorer=None, halflife=1000,
+                 nbytes=nbytes, cost=cost, hit=None, miss=None):
         if scorer is None:
             scorer = Scorer(halflife)
         self.scorer = scorer
@@ -64,6 +65,8 @@ class Cache(object):
         self.limit = limit
         self.get_nbytes = nbytes
         self.cost = cost
+        self.hit = hit
+        self.miss = miss
 
         self.data = dict()
         self.heap = heapdict()
@@ -99,8 +102,13 @@ class Cache(object):
         """
         self.scorer.touch(key)
         if key in self.data:
-            return self.data[key]
+            value = self.data[key]
+            if self.hit is not None:
+                self.hit(key, value)
+            return value
         else:
+            if self.miss is not None:
+                self.miss(key)
             return default
 
     def retire(self, key):

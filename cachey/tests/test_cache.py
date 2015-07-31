@@ -30,3 +30,23 @@ def test_memoize():
     assert memo_inc(1) == 2
 
     assert list(c.data.values()) == [2]
+
+
+def test_callbacks():
+    hit_flag = [False]
+    def hit(key, value):
+        hit_flag[0] = (key, value)
+
+    miss_flag = [False]
+    def miss(key):
+        miss_flag[0] = key
+
+    c = Cache(100, 100, hit=hit, miss=miss)
+
+    c.get('x')
+    assert miss_flag[0] == 'x'
+    assert hit_flag[0] == False
+
+    c.put('y', 1, 1)
+    c.get('y')
+    assert hit_flag[0] == ('y', 1)
