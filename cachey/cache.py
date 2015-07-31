@@ -1,11 +1,25 @@
 from .nbytes import nbytes
+from .score import Scorer
 from heapdict import heapdict
+import time
 
 def cost(nbytes, time):
     return float(time) / nbytes / 1e9
 
+
+def memo_key(args, kwargs):
+    result = (args, frozenset(kwargs.items()))
+    try:
+        hash(result)
+    except TypeError:
+        result = tuple(map(id, args)), str(kwargs)
+    return result
+
+
 class Cache(object):
-    def __init__(self, scorer, available_bytes, limit, nbytes=nbytes, cost=cost):
+    def __init__(self, available_bytes, limit, scorer=None, halflife=1000, nbytes=nbytes, cost=cost):
+        if scorer is None:
+            scorer = Scorer(halflife)
         self.scorer = scorer
         self.available_bytes = available_bytes
         self.limit = limit
@@ -48,3 +62,20 @@ class Cache(object):
         while self.total_bytes > self.available_bytes:
             key, score = self.heap.popitem()
             self.retire(key)
+
+    def memoize(self, func, key=memo_key):
+        def cached_func(*args, **kwargs):
+            k = (func, key(args, kwargs))
+
+            result = self.get(k)
+            if result is None:
+                start = time.time()
+                result = func(*args, **kwargs)
+                end = time.time()
+
+                nb = nbytes(result)
+
+                self.put(k, result, cost(nb, end - start), nbytes=nb)
+            return result
+        return cached_func
+
