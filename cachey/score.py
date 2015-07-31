@@ -2,10 +2,9 @@ from collections import defaultdict
 from math import log
 
 class Scorer(object):
-    def __init__(self, halflife, limit=None):
+    def __init__(self, halflife):
         self.cost = dict()
         self.time = defaultdict(lambda: 0)
-        self.limit = limit
 
         self._base_multiplier = 1 + log(2) / float(halflife)
         self.tick = 1
@@ -16,10 +15,9 @@ class Scorer(object):
         self._base *= self._base_multiplier
 
         if cost is not None:
-            if self.limit is None or cost < self.limit:
-                self.cost[key] = cost
-                self.time[key] += self._base
-                time = self.time[key]
+            self.cost[key] = cost
+            self.time[key] += self._base
+            time = self.time[key]
         else:
             try:
                 cost = self.cost[key]
