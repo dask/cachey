@@ -1,0 +1,6 @@
+recursive-include cachey *.py
+
+include setup.py
+include README.md
+include LICENSE.txt
+include MANIFEST.in
