@@ -24,7 +24,7 @@ Cachey tries to hold on to values that have the following characteristics
 
 It accomplishes this by adding the following to each items score on each access
 
-    score += time / nbytes * (1 + eps) ** time
+    score += compute_time / num_bytes * (1 + eps) ** tick_time
 
 For some small value of epsilon (which determines the memory halflife.) This
 has units of inverse bandwidth, has exponential decay of old results and
