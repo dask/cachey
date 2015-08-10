@@ -1,5 +1,8 @@
-from cachey import Cache, Scorer, nbytes
+import sys
 from time import sleep
+
+from cachey import Cache, Scorer, nbytes
+
 
 def test_cache():
     c = Cache(available_bytes=nbytes(1) * 3)
@@ -62,3 +65,17 @@ def test_callbacks():
     c.put('y', 1, 1)
     c.get('y')
     assert hit_flag[0] == ('y', 1)
+
+
+def test_just_one_reference():
+    c = Cache(available_bytes=1000)
+    o = object()
+    x = sys.getrefcount(o)
+
+    c.put('key', o, cost=10)
+    y = sys.getrefcount(o)
+    assert y == x + 1
+
+    c.retire('key')
+    z = sys.getrefcount(o)
+    assert z == x
