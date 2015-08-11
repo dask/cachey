@@ -17,5 +17,8 @@ try:
         df = pd.DataFrame(s)
         assert nbytes(df) == nbytes(s)
 
+        s = pd.Series(pd.Categorical(['a', 'b'] * 1000))
+        assert nbytes(s.cat.codes) < nbytes(s) < nbytes(s.cat.codes) * 2
+
 except ImportError:
     pass

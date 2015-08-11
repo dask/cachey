@@ -5,7 +5,7 @@ def _array(x):
     if x.dtype == 'O':
         return sys.getsizeof('0'*100) * x.size
     elif str(x.dtype) == 'category':
-        return _nbytes_array(x.codes) + _nbytes_array(x.categories)
+        return _array(x.codes) + _array(x.categories)
     else:
         return x.nbytes
 
