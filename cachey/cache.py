@@ -135,6 +135,13 @@ class Cache(object):
             key, score = self.heap.popitem()
             self.retire(key)
 
+    def __contains__(self, key):
+        return key in self.data
+
+    def clear(self):
+        for key in list(self.data):
+            self.retire(key)
+
     def memoize(self, func, key=memo_key):
         """ Create a cached function
 

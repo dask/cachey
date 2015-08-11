@@ -9,6 +9,7 @@ def test_cache():
 
     c.put('x', 1, 10)
     assert c.get('x') == 1
+    assert 'x' in c
 
     c.put('a', 1, 10)
     c.put('b', 1, 10)
@@ -16,6 +17,9 @@ def test_cache():
     assert set(c.data) == set('xbc')
     c.put('d', 1, 10)
     assert set(c.data) == set('xcd')
+
+    c.clear()
+    assert 'x' not in c
 
 
 def test_cache_scores_update():
