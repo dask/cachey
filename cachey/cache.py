@@ -122,6 +122,10 @@ class Cache(object):
         val = self.data.pop(key)
         self.total_bytes -= self.nbytes.pop(key)
 
+    def _shrink_one(self):
+        key, score = self.heap.popitem()
+        self.retire(key)
+
     def shrink(self):
         """ Retire keys from the cache until we're under bytes budget
 
@@ -132,15 +136,17 @@ class Cache(object):
             return
 
         while self.total_bytes > self.available_bytes:
-            key, score = self.heap.popitem()
-            self.retire(key)
+            self._shrink_one()
 
     def __contains__(self, key):
         return key in self.data
 
     def clear(self):
-        for key in list(self.data):
-            self.retire(key)
+        while self:
+            self._shrink_one()
+
+    def __nonzero__(self):
+        return not not self.data
 
     def memoize(self, func, key=memo_key):
         """ Create a cached function

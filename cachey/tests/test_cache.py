@@ -20,6 +20,8 @@ def test_cache():
 
     c.clear()
     assert 'x' not in c
+    assert not c.data
+    assert not c.heap
 
 
 def test_cache_scores_update():
