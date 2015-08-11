@@ -1,6 +1,15 @@
 import sys
 
 
+def _array(x):
+    if x.dtype == 'O':
+        return sys.getsizeof('0'*100) * x.size
+    elif str(x.dtype) == 'category':
+        return _nbytes_array(x.codes) + _nbytes_array(x.categories)
+    else:
+        return x.nbytes
+
+
 def nbytes(o):
     """ Number of bytes of an object
 
@@ -14,11 +23,15 @@ def nbytes(o):
     >>> nbytes(np.ones(1000, dtype='i4'))
     4000
     """
-    if hasattr(o, 'nbytes'):
+    name = type(o).__module__ + '.' + type(o).__name__
+
+    if name == 'pandas.Series':
+        return _array(o._data.blocks[0].values) + _array(o.index._data)
+    elif name == 'pandas.DataFrame':
+        return _array(o.index) + sum(map(_array, o._data.blocks))
+    elif name == 'numpy.ndarray':
+        return _array(x)
+    elif hasattr(o, 'nbytes'):
         return o.nbytes
-    n = str(type(o))
-    if 'pandas' in n and ('DataFrame' in n or 'Series' in n):
-        return sum(b.values.nbytes * (10 if b.values.dtype == 'O' else 1)
-                   for b in o._data.blocks)  # pragma: no cover
     else:
         return sys.getsizeof(o)
