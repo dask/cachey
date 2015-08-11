@@ -25,12 +25,13 @@ def nbytes(o):
     """
     name = type(o).__module__ + '.' + type(o).__name__
 
-    if name == 'pandas.Series':
+    if name == 'pandas.core.series.Series':
         return _array(o._data.blocks[0].values) + _array(o.index._data)
-    elif name == 'pandas.DataFrame':
-        return _array(o.index) + sum(map(_array, o._data.blocks))
+    elif name == 'pandas.core.frame.DataFrame':
+        return _array(o.index) + sum([_array(blk.values)
+                                     for blk in o._data.blocks])
     elif name == 'numpy.ndarray':
-        return _array(x)
+        return _array(o)
     elif hasattr(o, 'nbytes'):
         return o.nbytes
     else:
