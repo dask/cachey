@@ -4,7 +4,7 @@ from os.path import exists
 from setuptools import setup
 
 setup(name='cachey',
-      version='0.1.0',
+      version='0.1.1',
       description='Caching mindful of computation/storage costs',
       url='http://github.com/mrocklin/cachey/',
       maintainer='Matthew Rocklin',
