@@ -6,7 +6,7 @@ from setuptools import setup
 setup(name='cachey',
       version='0.1.1',
       description='Caching mindful of computation/storage costs',
-      url='http://github.com/mrocklin/cachey/',
+      url='http://github.com/blaze/cachey/',
       maintainer='Matthew Rocklin',
       maintainer_email='mrocklin@gmail.com',
       license='BSD',
