@@ -142,7 +142,7 @@ class Cache(object):
         return key in self.data
 
     def clear(self):
-        while self:
+        while self.data:
             self._shrink_one()
 
     def __nonzero__(self):
