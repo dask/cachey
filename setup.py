@@ -11,7 +11,7 @@ setup(name='cachey',
       maintainer_email='mrocklin@gmail.com',
       license='BSD',
       keywords='',
-      packages=['cachey'],
+      packages=['cachey', 'cachey.tests'],
       install_requires=list(open('requirements.txt').read().strip().split('\n')),
       long_description=(open('README.md').read() if exists('README.md')
                         else ''),
