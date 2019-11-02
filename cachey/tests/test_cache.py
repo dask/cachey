@@ -9,7 +9,7 @@ from cachey.cache import cost
 
 def test_cost():
 
-    assert cost(5_000, 5) == 1e-12
+    assert cost(5000, 5) == 1e-12
     assert cost(0, 5) == 1e-08
     assert cost(0, 5, .1) == 5e-08
 
