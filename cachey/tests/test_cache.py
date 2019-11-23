@@ -9,12 +9,8 @@ from cachey.cache import cost
 
 def test_cost():
 
-    assert cost(5000, 5) == 1e-12
-    assert cost(0, 5) == 1e-08
-    assert cost(0, 5, .1) == 5e-08
-
-    with pytest.raises(ZeroDivisionError):
-        cost(0, 5, 0) # Effectively disable max()
+    assert cost(200, 500) == 2.5e-09
+    assert cost(0, 500) == 5e-07
 
 
 def test_cache():
