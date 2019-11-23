@@ -3,7 +3,7 @@ from .score import Scorer
 from heapdict import heapdict
 import time
 
-def cost(nbytes, time, zvalue=.5):
+def cost(nbytes, time):
     return float(time) / (nbytes if nbytes else zvalue) / 1e9
 
 
