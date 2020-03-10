@@ -61,7 +61,7 @@ class Cache(object):
     """
     def __init__(self, available_bytes, limit=0, scorer=None, halflife=1000,
                  nbytes=nbytes, cost=cost, hit=None, miss=None,
-                 cache_data=dict()):
+                 cache_data=None):
         if scorer is None:
             scorer = Scorer(halflife)
         self.scorer = scorer
@@ -72,7 +72,7 @@ class Cache(object):
         self.hit = hit
         self.miss = miss
 
-        self.data = cache_data
+        self.data = cache_data if cache_data is not None else dict()
         self.heap = heapdict()
         self.nbytes = dict()
         self.total_bytes = 0
