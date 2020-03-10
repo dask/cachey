@@ -41,6 +41,9 @@ class Cache(object):
         Function to compute the number of bytes of an input.
     cost:  function  (defaults to cost())
         Determine cost from nbytes and time
+    cache_data : MutableMapping (defaults to dict())
+        Dict-like object to use for cache
+
 
     Example
     -------
@@ -57,7 +60,8 @@ class Cache(object):
     >>> memo_inc = c.memoize(inc)  # Memoize functions
     """
     def __init__(self, available_bytes, limit=0, scorer=None, halflife=1000,
-                 nbytes=nbytes, cost=cost, hit=None, miss=None):
+                 nbytes=nbytes, cost=cost, hit=None, miss=None,
+                 cache_data=dict()):
         if scorer is None:
             scorer = Scorer(halflife)
         self.scorer = scorer
@@ -68,7 +72,7 @@ class Cache(object):
         self.hit = hit
         self.miss = miss
 
-        self.data = dict()
+        self.data = cache_data
         self.heap = heapdict()
         self.nbytes = dict()
         self.total_bytes = 0
