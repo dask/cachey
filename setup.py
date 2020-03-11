@@ -30,4 +30,5 @@ setup(name='cachey',
       install_requires=list(open('requirements.txt').read().strip().split('\n')),
       long_description=(open('README.md').read() if exists('README.md')
                         else ''),
+      long_description_content_type='text/markdown',
       zip_safe=False)
