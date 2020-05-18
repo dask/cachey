@@ -32,6 +32,17 @@ def test_cache():
     assert not c.heap
 
 
+def test_cache_data_dict():
+
+    my_dict = {}
+    c = Cache(available_bytes=nbytes(1) * 3, cache_data=my_dict)
+    c.put('x', 1, 10)
+    assert c.get('x') == 1
+    assert my_dict['x'] == 1
+    c.clear()
+    assert 'x' not in c
+
+
 def test_cache_resize():
     c = Cache(available_bytes=nbytes(1) * 3)
 
