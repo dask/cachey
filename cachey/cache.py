@@ -4,7 +4,7 @@ from heapdict import heapdict
 import time
 
 def cost(nbytes, time):
-    return float(time) / nbytes / 1e9
+    return float(time) / (nbytes or 1) / 1e9
 
 
 def memo_key(args, kwargs):
