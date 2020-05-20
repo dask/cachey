@@ -3,6 +3,14 @@ from time import sleep
 
 from cachey import Cache, Scorer, nbytes
 
+from cachey.cache import cost
+
+
+def test_cost_with_zero_bytes():
+
+    assert cost(200, 500) == 2.5e-09
+    assert 0 <= cost(0, 500) <= 100
+
 
 def test_cache():
     c = Cache(available_bytes=nbytes(1) * 3)
@@ -22,6 +30,18 @@ def test_cache():
     assert 'x' not in c
     assert not c.data
     assert not c.heap
+
+
+def test_cache_data_dict():
+
+    my_dict = {}
+    c = Cache(available_bytes=nbytes(1) * 3, cache_data=my_dict)
+    c.put('x', 1, 10)
+    assert c.get('x') == 1
+    assert my_dict['x'] == 1
+    c.clear()
+    assert 'x' not in c
+
 
 def test_cache_resize():
     c = Cache(available_bytes=nbytes(1) * 3)
@@ -45,6 +65,7 @@ def test_cache_resize():
     c.resize(available_bytes=nbytes(1) * 10)
 
     assert set(c.data) == set('x')
+
 
 def test_cache_scores_update():
     c = Cache(available_bytes=nbytes(1) * 2)
@@ -77,10 +98,12 @@ def test_memoize():
 
 def test_callbacks():
     hit_flag = [False]
+
     def hit(key, value):
         hit_flag[0] = (key, value)
 
     miss_flag = [False]
+
     def miss(key):
         miss_flag[0] = key
 
