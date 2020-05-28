@@ -53,10 +53,11 @@ This also has a `memoize` method
 Install
 -------
 
-Cachey is on PyPI:
+Cachey is on PyPI and Conda-forge:
 
 ``` shell
-$ pip install cachey
+$ pip install cachey  # option 1
+$ conda install cachey -c conda-forge  # option 2
 ```
 
 Or, for development:
