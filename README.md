@@ -50,6 +50,22 @@ This also has a `memoize` method
 >>> memo_f = c.memoize(f)
 ```
 
+Install
+-------
+
+Cachey is on PyPI:
+
+``` shell
+$ pip install cachey
+```
+
+Or, for development:
+
+``` shell
+$ python setup.py install  # option 1
+$ pip install -e .  # option 2
+```
+
 Status
 ------
 
