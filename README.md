@@ -50,6 +50,23 @@ This also has a `memoize` method
 >>> memo_f = c.memoize(f)
 ```
 
+Install
+-------
+
+Cachey is on PyPI and Conda-forge:
+
+``` shell
+$ pip install cachey  # option 1
+$ conda install cachey -c conda-forge  # option 2
+```
+
+Or install from source
+
+``` shell
+$ python setup.py install  # option 1
+$ pip install -e .  # option 2 (best for development)
+```
+
 Status
 ------
 
